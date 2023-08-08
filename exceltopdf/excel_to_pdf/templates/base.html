@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excel File Upload</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+
+        h2 {
+            color: #22409a;
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .error-message {
+            color: red;
+        }
+
+        .success-message {
+            color: green;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-button {
+            background-color: #22409a;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .upload-button:hover {
+            background-color: #183e85;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .file-name {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Upload an Excel file</h2>
+    {% if error_message %}
+    <p class="error-message">{{ error_message }}</p>
+    {% endif %}
+    {% if success_message %}
+    <p class="success-message">{{ success_message }}</p>
+    {% endif %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="fileUpload" class="file-input-label">
+            Choose File
+            <input type="file" name="excel_file" id="fileUpload" accept=".xlsx">
+        </label>
+        <span class="file-name" id="fileNameSpan">No file chosen</span>
+        <br>
+        <button type="submit" class="upload-button">Upload</button>
+    </form>
+    <script>
+        const fileInput = document.getElementById('fileUpload');
+        const fileNameSpan = document.getElementById('fileNameSpan');
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length > 0) {
+                fileNameSpan.textContent = files[0].name;
+            } else {
+                fileNameSpan.textContent = 'No file chosen';
+            }
+        });
+    </script>
+
+
+    {% if success_message %}
+    <div class="dropdown"><br>
+        <button onclick="toggleDropdown()">Select from the options below</button><br>
+        <div id="dropdownContent" class="dropdown-content">
+            <label>
+                <input type="checkbox" name="selected_items" value="Liver"> Liver 
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Kidney"> Kidney 
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Vitamin_B12"> Vitamin_B12
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Lipid_Cholesterol"> Lipid_Cholesterol
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Diabetes"> Diabetes
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Iron"> Iron
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Thyroid"> Thyroid
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Vitamin_D25"> Vitamin_D25
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Cardiac_Care"> Cardiac_Care
+            </label>
+            <label>
+                <input type="checkbox" name="selected_items" value="Bone_Care"> Bone_Care
+            </label>
+        </div>
+    </div>
+    {% comment %} <a class="submit-btn" href="result/">submit</a> {% endcomment %}
+    <form method="post" id="submitForm" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="selected_items" id="selectedItemsInput">
+    </form>
+    
+    <a class="submit-btn" href="result/" onclick="saveSelectedItems()">Submit</a>
+    
+    
+
+    <script>
+        function toggleDropdown() {
+            const dropdownContent = document.getElementById("dropdownContent");
+            dropdownContent.style.display = dropdownContent.style.display === "none" ? "block" : "none";
+        }
+        
+    function saveSelectedItems() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="selected_items"]:checked');
+        const selectedItems = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+        // Set the selected items to the hidden input element in the form
+        console.log(selectedItems);
+
+        // Optionally, you can also show an alert with the selected items
+        alert('Selected items: ' + selectedItems.join(', '));
+    }
+      
+    </script>
+    {% endif %}
+</body>
+</html>

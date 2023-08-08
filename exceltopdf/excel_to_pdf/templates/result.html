@@ -1,0 +1,26 @@
+<!-- Replace the existing loop with the following -->
+{% if selected_items %}
+    {% for item_result in result %}
+    <h3>{{ item_result.0 }}:</h3>
+    <ul>
+        {% for item in item_result.1 %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Major Functions:</h3>
+    <ul>
+        {% for function in item_result.2 %}
+        <li>{{ function }}</li>
+        {% endfor %}
+    </ul>
+    <h3>Causes:</h3>
+    <ul>
+        {% for cause in item_result.3 %}
+        <li>{{ cause }}</li>
+        {% endfor %}
+    </ul>
+    <img src="{{ item_result.4.url }}" alt="Result Image">
+    {% endfor %}
+{% else %}
+    <p>No items selected.</p>
+{% endif %}
